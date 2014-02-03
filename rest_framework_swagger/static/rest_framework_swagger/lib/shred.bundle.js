@@ -2627,7 +2627,7 @@ var xhrCSRFcookie = function(name){
 Request.prototype.end = function (s) {
     if (s !== undefined) this.write(s);
 
-    //set csrftoken to xhr header to pass django csrf validation
+    //set csrftoken to xhr header to pass csrf validation
     this.xhr.setRequestHeader("X-CSRFToken", xhrCSRFcookie('csrftoken'));
 
     this.xhr.send(this.body);
