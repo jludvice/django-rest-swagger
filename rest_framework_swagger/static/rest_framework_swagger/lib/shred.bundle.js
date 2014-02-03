@@ -2603,8 +2603,33 @@ Request.prototype.write = function (s) {
     this.body += s;
 };
 
+    /**
+     * get cookie by name
+     * @param name  name of cookie
+     * @returns {*}
+     */
+var xhrCSRFcookie = function(name){
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = $.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+};
+
 Request.prototype.end = function (s) {
     if (s !== undefined) this.write(s);
+
+    //set csrftoken to xhr header to pass django csrf validation
+    this.xhr.setRequestHeader("X-CSRFToken", xhrCSRFcookie('csrftoken'));
+
     this.xhr.send(this.body);
 };
 
